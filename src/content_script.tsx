@@ -1,3 +1,7 @@
+import React from 'react'
+import ReactDOM from 'react-dom'
+import Frame from './frame/frame'
+
 chrome.runtime.onMessage.addListener(function (msg, sender, sendResponse) {
   if (msg.color) {
     console.log("Receive color = " + msg.color);
@@ -10,37 +14,47 @@ chrome.runtime.onMessage.addListener(function (msg, sender, sendResponse) {
 
 // https://github.com/MariusBongarts/medium-highlighter/blob/master/src/content_script.ts
 
-const mediumHighlighter = document.createElement("medium-highlighter");
-document.body.appendChild(mediumHighlighter);
+if (Frame.isReady()) {
+  Frame.toggle()
+} else {
+  boot()
+}
 
-const setMarkerPosition = (markerPosition: any) => mediumHighlighter.setAttribute(
-  "markerPosition",
-  JSON.stringify(markerPosition)
-);
+function boot() {
+  const root = document.createElement('div')
 
-const getSelectedText = () => (window.getSelection() as any).toString();
+  const styleElement = document.createElement('style');
+  styleElement.innerHTML = `
+    .capture-highlighter {
+      border: 2px solid red;
+    }
+  `
+  document.getElementsByTagName("head")[0].appendChild(styleElement);
 
-document.addEventListener("click", () => {
-  if (getSelectedText().length > 0) {
-    setMarkerPosition(getMarkerPosition());
+  document.body.appendChild(root)
+
+  const startCapture = () => {
+    console.log('start capture');
+    document.addEventListener('mousemove', e => {
+      const element = document.elementFromPoint(e.clientX, e.clientY) as HTMLElement;
+      element.addEventListener('mouseenter', e => {
+        const elementsByClassName = document.getElementsByClassName('capture-highlighter');
+        for(let i = 0; i < elementsByClassName.length; i++) {
+          elementsByClassName[i].classList.remove('capture-highlighter');
+        }
+        (e.currentTarget as HTMLElement).classList.add('capture-highlighter');
+      });
+
+    }, {passive: true})
   }
-});
 
-document.addEventListener("selectionchange", () => {
-  if (getSelectedText().length === 0) {
-    setMarkerPosition({display: "none"});
-  }
-});
+  const App = (
+    <Frame >
+      <div id="capture">
+        <button id="captureButton" onClick={startCapture}>Capture</button>
+      </div>
+    </Frame>
+  )
 
-function getMarkerPosition() {
-  const rangeBounds = (window
-      .getSelection() as any
-  ).getRangeAt(0)
-    .getBoundingClientRect();
-  return {
-    // Substract width of marker button -> 40px / 2 = 20
-    left: rangeBounds.left + rangeBounds.width / 2 - 20,
-    top: rangeBounds.top - 30,
-    display: "flex",
-  };
+  ReactDOM.render(App, root)
 }

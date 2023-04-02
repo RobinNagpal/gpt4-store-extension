@@ -8,9 +8,7 @@ module.exports = {
     popup: path.join(srcDir, 'popup.tsx'),
     options: path.join(srcDir, 'options.tsx'),
     background: path.join(srcDir, 'background.ts'),
-    content_script: path.join(srcDir, 'content_script.tsx'),
-    custom_elements: path.join(srcDir, '../node_modules/@webcomponents/custom-elements/custom-elements.min.js'),
-    medium_highlighter: path.join(srcDir, 'medium-highlighter.tsx'),
+    content_script: path.join(srcDir, 'content_script.tsx')
   },
   output: {
     path: path.join(__dirname, "../dist/js"),
