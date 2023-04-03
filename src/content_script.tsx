@@ -1,7 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { FrameContents } from './frame_contents';
-import Frame from './frame/frame';
+import CaptureButton from './components/capture_button';
+import Frame from './components/frame';
+import IndexDropdown from './components/index_dropdown';
 
 chrome.runtime.onMessage.addListener(function (msg, sender, sendResponse) {
   if (msg.color) {
@@ -23,11 +24,12 @@ if (Frame.isReady()) {
 
 function boot() {
   const root = document.createElement('div');
+  root.id = 'capture-root-node';
 
   const styleElement = document.createElement('style');
   styleElement.innerHTML = `
     .capture-highlighter {
-      border: 4px solid yellow !important;
+      border: 4px solid red !important;
       z-index: 9999;
     }
   `;
@@ -37,7 +39,8 @@ function boot() {
 
   const App = (
     <Frame>
-      <FrameContents />
+      <IndexDropdown />
+      <CaptureButton />
     </Frame>
   );
 

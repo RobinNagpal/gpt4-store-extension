@@ -3,7 +3,6 @@ import cx from 'classnames';
 import { css } from 'glamor';
 
 interface IProps {
-  url?: string;
   delay?: number;
   className?: string;
   maskClassName?: string;
@@ -34,11 +33,13 @@ interface IState {
 }
 
 const frameClass = css({
+  background: 'rgba(255,255,255,.35)',
+  height: '200px',
   border: 'none',
   width: '100%',
-  borderRadius: '8px',
+  borderRadius: '8px 0 0 8px',
   boxShadow: '-1px 1px 8px rgba(0,0,0,.15)',
-  top: '50%',
+  top: '40%',
   position: 'relative',
 });
 
@@ -63,7 +64,7 @@ const containerClass = css({
   right: '0px',
   height: '100%',
   width: '65%',
-  maxWidth: '150px',
+  maxWidth: '250px',
   padding: '8px',
   boxSizing: 'border-box',
   transform: 'translateX(100%)',
@@ -77,9 +78,9 @@ const containerVisibleClass = css({
 
 const containerMinimizedClass = css({
   cursor: 'pointer',
-  transform: 'translateX(74%)',
+  transform: 'translateX(84%)',
   ':hover': {
-    transform: 'translateX(72%)',
+    transform: 'translateX(82%)',
   },
   '& > iframe': {
     pointerEvents: 'none',
@@ -94,7 +95,6 @@ export class Frame extends Component<IProps, IState> {
   private _visibleRenderTimeout: ReturnType<typeof setTimeout> | undefined;
 
   static defaultProps: IProps = {
-    url: '',
     delay: 500,
     maskClassName: '',
     maskStyle: {},
@@ -187,8 +187,6 @@ export class Frame extends Component<IProps, IState> {
   render() {
     const { isVisible, isMinimized } = this.state;
     const {
-      url,
-      className,
       maskClassName,
       maskStyle,
       containerClassName,
@@ -196,7 +194,6 @@ export class Frame extends Component<IProps, IState> {
       iframeClassName,
       iframeStyle,
       children,
-      containerChildren,
     } = this.props;
 
     return (
