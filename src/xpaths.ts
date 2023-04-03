@@ -1,4 +1,4 @@
-function createXPathFromElement(elm: Element): string | null {
+export function createXPathFromElement(elm: Element): string | null {
   const allNodes = document.getElementsByTagName('*');
   const segs: string[] = [];
 
@@ -44,7 +44,7 @@ function createXPathFromElement(elm: Element): string | null {
   return segs.length ? '/' + segs.join('/') : null;
 }
 
-function lookupElementByXPath(path: string): Element | null {
+export function lookupElementByXPath(path: string): Element | null {
   const evaluator = new XPathEvaluator();
   const result = evaluator.evaluate(
     path,
