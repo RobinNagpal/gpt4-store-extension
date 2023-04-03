@@ -5,13 +5,12 @@ function polling() {
 
 polling();
 
+console.log('Chrome Github Trending Sidebar Extension Registered');
 
-console.log('Chrome Github Trending Sidebar Extension Registered')
-
-chrome.browserAction.onClicked.addListener((tab: any) => {
-  console.log('Browser Action Triggered')
-  // for the current tab, inject the "inject.js" file & execute it
-  chrome.tabs.executeScript(tab.id, {
-    file: 'entry.js'
-  })
-})
+chrome.runtime.onInstalled.addListener(function () {
+  chrome.contextMenus.create({
+    title: 'Capture Text',
+    contexts: ['all'],
+    id: 'myContextMenuId',
+  });
+});

@@ -14,9 +14,18 @@ interface IProps {
   iframeStyle?: React.CSSProperties;
   children?: React.ReactNode;
   containerChildren?: React.ReactNode;
-  onMount?: (refs: { mask: HTMLDivElement | null; frame: HTMLIFrameElement | null }) => void;
-  onUnmount?: (refs: { mask: HTMLDivElement | null; frame: HTMLIFrameElement | null }) => void;
-  onLoad?: (refs: { mask: HTMLDivElement | null; frame: HTMLIFrameElement | null }) => void;
+  onMount?: (refs: {
+    mask: HTMLDivElement | null;
+    frame: HTMLIFrameElement | null;
+  }) => void;
+  onUnmount?: (refs: {
+    mask: HTMLDivElement | null;
+    frame: HTMLIFrameElement | null;
+  }) => void;
+  onLoad?: (refs: {
+    mask: HTMLDivElement | null;
+    frame: HTMLIFrameElement | null;
+  }) => void;
 }
 
 interface IState {
@@ -24,13 +33,13 @@ interface IState {
   isMinimized: boolean;
 }
 
-const iframeClass = css({
+const frameClass = css({
   border: 'none',
   width: '100%',
-  height: '100%',
-  background: 'white',
   borderRadius: '8px',
   boxShadow: '-1px 1px 8px rgba(0,0,0,.15)',
+  top: '50%',
+  position: 'relative',
 });
 
 const maskClass = css({
@@ -54,7 +63,7 @@ const containerClass = css({
   right: '0px',
   height: '100%',
   width: '65%',
-  maxWidth: '400px',
+  maxWidth: '150px',
   padding: '8px',
   boxSizing: 'border-box',
   transform: 'translateX(100%)',
@@ -68,9 +77,9 @@ const containerVisibleClass = css({
 
 const containerMinimizedClass = css({
   cursor: 'pointer',
-  transform: 'translateX(94%)',
+  transform: 'translateX(74%)',
   ':hover': {
-    transform: 'translateX(92%)',
+    transform: 'translateX(72%)',
   },
   '& > iframe': {
     pointerEvents: 'none',
@@ -84,7 +93,6 @@ export class Frame extends Component<IProps, IState> {
   private frameRef: RefObject<HTMLIFrameElement> = React.createRef();
   private _visibleRenderTimeout: ReturnType<typeof setTimeout> | undefined;
 
-
   static defaultProps: IProps = {
     url: '',
     delay: 500,
@@ -94,14 +102,10 @@ export class Frame extends Component<IProps, IState> {
     containerStyle: {},
     iframeClassName: '',
     iframeStyle: {},
-    onMount: () => {
-    },
-    onUnmount: () => {
-    },
-    onLoad: () => {
-    }
+    onMount: () => {},
+    onUnmount: () => {},
+    onLoad: () => {},
   };
-
 
   mask: HTMLDivElement | null = null;
   frame: HTMLIFrameElement | null = null;
@@ -110,33 +114,33 @@ export class Frame extends Component<IProps, IState> {
     super(props);
     this.state = {
       isVisible: false,
-      isMinimized: false
+      isMinimized: false,
     };
   }
 
   componentDidMount(): void {
-    const {delay, onMount} = this.props;
+    const { delay, onMount } = this.props;
 
     window[FRAME_TOGGLE_FUNCTION] = this.toggleFrame;
 
     onMount({
       mask: this.mask,
-      frame: this.frame
+      frame: this.frame,
     });
 
     this._visibleRenderTimeout = setTimeout(() => {
       this.setState({
-        isVisible: true
+        isVisible: true,
       });
     }, delay);
   }
 
   componentWillUnmount(): void {
-    const {onUnmount} = this.props;
+    const { onUnmount } = this.props;
 
     onUnmount({
       mask: this.mask,
-      frame: this.frame
+      frame: this.frame,
     });
 
     delete window[FRAME_TOGGLE_FUNCTION];
@@ -144,31 +148,31 @@ export class Frame extends Component<IProps, IState> {
   }
 
   onLoad = (): void => {
-    const {onLoad} = this.props;
+    const { onLoad } = this.props;
 
     onLoad({
       mask: this.mask,
-      frame: this.frame
+      frame: this.frame,
     });
-  }
+  };
 
   onMaskClick = (): void => {
     this.setState({
-      isMinimized: true
+      isMinimized: true,
     });
-  }
+  };
 
   onFrameClick = (): void => {
     this.setState({
-      isMinimized: false
+      isMinimized: false,
     });
-  }
+  };
 
   toggleFrame = (): void => {
     this.setState({
-      isMinimized: !this.state.isMinimized
+      isMinimized: !this.state.isMinimized,
     });
-  }
+  };
 
   static isReady(): boolean {
     return typeof window[FRAME_TOGGLE_FUNCTION] !== 'undefined';
@@ -181,7 +185,7 @@ export class Frame extends Component<IProps, IState> {
   }
 
   render() {
-    const { isVisible, isMinimized } = this.state
+    const { isVisible, isMinimized } = this.state;
     const {
       url,
       className,
@@ -192,48 +196,45 @@ export class Frame extends Component<IProps, IState> {
       iframeClassName,
       iframeStyle,
       children,
-      containerChildren
-    } = this.props
+      containerChildren,
+    } = this.props;
 
     return (
-      <div>
+      <div id="capture-frame-container">
         <div
           className={cx({
             [maskClass.toString()]: true,
             [maskVisibleClass.toString()]: !isMinimized,
-            [maskClassName]: true
+            [maskClassName]: true,
           })}
           style={maskStyle}
           onClick={this.onMaskClick}
-          ref={mask => this.mask = mask}
+          ref={(mask) => (this.mask = mask)}
         />
-
         <div
           className={cx({
             [containerClass.toString()]: true,
             [containerVisibleClass.toString()]: isVisible,
             [containerMinimizedClass.toString()]: isMinimized,
-            [containerClassName]: true
+            [containerClassName]: true,
           })}
           style={containerStyle}
           onClick={this.onFrameClick}
+          id="capture-frame-wrapper"
         >
-
           <div
             className={cx({
-              [iframeClass.toString()]: true,
-              [iframeClassName]: true
+              [frameClass.toString()]: true,
+              [iframeClassName]: true,
             })}
             style={iframeStyle}
+            id="capture-frame"
           >
             {children}
           </div>
-
-
-
         </div>
       </div>
-    )
+    );
   }
 }
 
