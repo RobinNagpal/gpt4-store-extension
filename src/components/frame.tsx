@@ -197,7 +197,7 @@ export class Frame extends Component<IProps, IState> {
     } = this.props;
 
     return (
-      <div id="capture-frame-container">
+      <div>
         <div
           className={cx({
             [maskClass.toString()]: true,
@@ -217,7 +217,6 @@ export class Frame extends Component<IProps, IState> {
           })}
           style={containerStyle}
           onClick={this.onFrameClick}
-          id="capture-frame-wrapper"
         >
           <div
             className={cx({
@@ -225,7 +224,6 @@ export class Frame extends Component<IProps, IState> {
               [iframeClassName]: true,
             })}
             style={iframeStyle}
-            id="capture-frame"
           >
             {children}
           </div>

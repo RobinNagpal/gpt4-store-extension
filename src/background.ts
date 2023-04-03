@@ -5,12 +5,20 @@ function polling() {
 
 polling();
 
-console.log('Chrome Github Trending Sidebar Extension Registered');
-
 chrome.runtime.onInstalled.addListener(function () {
   chrome.contextMenus.create({
     title: 'Capture Text',
     contexts: ['all'],
+    type: 'normal',
     id: 'myContextMenuId',
+    visible: true,
   });
+});
+
+// add click event listener for the context menu
+
+chrome.contextMenus.onClicked.addListener(function (info, tab) {
+  if (info.menuItemId === 'myContextMenuId') {
+    chrome.tabs.sendMessage(tab.id, { action: 'right_menu_clicked' });
+  }
 });

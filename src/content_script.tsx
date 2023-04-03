@@ -47,16 +47,11 @@ function boot() {
   ReactDOM.render(App, root);
 }
 
-chrome.contextMenus.onClicked.addListener(function (info, tab) {
-  const elementsByClassName = document.getElementsByClassName(
-    'capture-highlighter',
-  );
-
-  for (let i = 0; i < elementsByClassName.length; i++) {}
-
-  chrome.tabs.create({
-    url:
-      'http://www.google.com/search?q=' +
-      encodeURIComponent(info.selectionText),
-  });
+// read message from background script
+chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
+  console.log('onMessage', request, sender, sendResponse);
+  if (request.action == 'right_menu_clicked') {
+    console.log('right_menu_clicked', request);
+    sendResponse(document.all[0].outerHTML);
+  }
 });

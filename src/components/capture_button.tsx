@@ -21,10 +21,18 @@ const captureStopButtonClass = css({
   backgroundColor: 'red',
 });
 
-export function CaptureButton() {
-  const [isCapturing, setIsCapturing] = useState(false);
+export class CaptureButton extends React.Component<
+  {},
+  { isCapturing: boolean }
+> {
+  constructor(props) {
+    super(props);
+    this.state = {
+      isCapturing: false,
+    };
+  }
 
-  const listener = useCallback((e) => {
+  listener = (e) => {
     const element = document.elementFromPoint(
       e.clientX,
       e.clientY,
@@ -34,51 +42,60 @@ export function CaptureButton() {
       .getElementById('capture-root-node')
       .contains(element);
 
-    if (!isExtensionElement) {
-      element.addEventListener('mouseenter', (e) => {
-        const elementsByClassName = document.getElementsByClassName(
-          'capture-highlighter',
-        );
-        for (let i = 0; i < elementsByClassName.length; i++) {
-          elementsByClassName[i].classList.remove('capture-highlighter');
-        }
-        (e.currentTarget as HTMLElement).classList.add('capture-highlighter');
-      });
+    if (!isExtensionElement && this.state?.isCapturing) {
+      element.addEventListener(
+        'mouseenter',
+        (e) => {
+          console.log('isCapturing 001', this.state?.isCapturing);
+          const elementsByClassName = document.getElementsByClassName(
+            'capture-highlighter',
+          );
+          for (let i = 0; i < elementsByClassName.length; i++) {
+            elementsByClassName[i].classList.remove('capture-highlighter');
+          }
+          if (this.state?.isCapturing) {
+            (e.currentTarget as HTMLElement).classList.add(
+              'capture-highlighter',
+            );
+          }
+        },
+        { once: true, passive: true },
+      );
     }
-  }, []);
+  };
 
-  const startCapture = useCallback(() => {
+  startCapture = () => {
     console.log('start capture');
-    setIsCapturing(true);
-    document.addEventListener('mousemove', listener, { passive: true });
-  }, []);
+    this.setState({ isCapturing: true });
+    document.addEventListener('mousemove', this.listener, { passive: true });
+  };
 
-  const stopCapture = useCallback(() => {
-    setIsCapturing(false);
-    document.removeEventListener('mousemove', listener);
-  }, []);
+  stopCapture = () => {
+    this.setState({ isCapturing: false });
+    document.removeEventListener('mousemove', this.listener);
+  };
 
-  return (
-    <>
-      {!isCapturing ? (
-        <button
-          className={`${buttonClass.toString()} ${captureStartButtonClass.toString()}`}
-          id="capture-start-button"
-          onClick={startCapture}
-        >
-          Capture
-        </button>
-      ) : (
-        <button
-          className={`${buttonClass.toString()} ${captureStopButtonClass.toString()}`}
-          id="capture-stop-button"
-          onClick={stopCapture}
-        >
-          Stop
-        </button>
-      )}
-    </>
-  );
+  render() {
+    return (
+      <>
+        {!this.state?.isCapturing ? (
+          <button
+            className={`${buttonClass.toString()} ${captureStartButtonClass.toString()}`}
+            onClick={this.startCapture}
+          >
+            Capture
+          </button>
+        ) : (
+          <button
+            className={`${buttonClass.toString()} ${captureStopButtonClass.toString()}`}
+            onClick={this.stopCapture}
+          >
+            Stop
+          </button>
+        )}
+      </>
+    );
+  }
 }
 
 export default CaptureButton;
