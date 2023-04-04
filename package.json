@@ -20,7 +20,8 @@
     "classnames": "^2.2.5",
     "glamor": "^2.20.25",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "styled-components": "^5.3.9"
   },
   "devDependencies": {
     "@types/chrome": "0.0.158",
@@ -34,9 +35,13 @@
     "rimraf": "^3.0.2 ",
     "ts-jest": "^27.0.5",
     "ts-loader": "^8.0.0",
+    "tsconfig-paths-webpack-plugin": "^4.0.1",
     "typescript": "^4.4.3 ",
     "webpack": "^5.76.0",
     "webpack-cli": "^4.0.0",
     "webpack-merge": "^5.0.0"
+  },
+  "resolutions": {
+    "styled-components": "^5"
   }
 }

@@ -1,6 +1,8 @@
 import React, { useCallback, useState } from 'react';
 import { css } from 'glamor';
+import styled from 'styled-components';
 
+// convert the following glamor code to styled-components
 const buttonClass = css({
   border: 'none',
   color: 'white',
@@ -13,13 +15,25 @@ const buttonClass = css({
   margin: '16px',
 });
 
-const captureStartButtonClass = css({
-  backgroundColor: '#4CAF50',
-});
+const Button = styled.button`
+  border: none;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  font-size: 16px;
+  display: inline-block;
+  border-radius: 4px;
+  margin: 16px;
+`;
 
-const captureStopButtonClass = css({
-  backgroundColor: 'red',
-});
+const CaptureStartButton = styled(Button)`
+  background-color: #4caf50;
+`;
+
+const CaptureStopButton = styled(Button)`
+  background-color: red;
+`;
 
 export class CaptureButton extends React.Component<
   { captureGlobal: any },
@@ -81,22 +95,15 @@ export class CaptureButton extends React.Component<
   };
 
   render() {
+    const capturing = this.state?.isCapturing;
     return (
       <>
-        {!this.state?.isCapturing ? (
-          <button
-            className={`${buttonClass.toString()} ${captureStartButtonClass.toString()}`}
-            onClick={this.startCapture}
-          >
+        {!capturing ? (
+          <CaptureStartButton onClick={this.startCapture}>
             Capture
-          </button>
+          </CaptureStartButton>
         ) : (
-          <button
-            className={`${buttonClass.toString()} ${captureStopButtonClass.toString()}`}
-            onClick={this.stopCapture}
-          >
-            Stop
-          </button>
+          <CaptureStopButton onClick={this.stopCapture}>Stop</CaptureStopButton>
         )}
       </>
     );

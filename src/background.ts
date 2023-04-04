@@ -1,3 +1,5 @@
+import { ALL_DATA_KEY } from '@/utils/Constants';
+
 function polling() {
   // console.log("polling");
   setTimeout(polling, 1000 * 30);
@@ -15,10 +17,9 @@ chrome.runtime.onInstalled.addListener(function () {
   });
 });
 
-// A function to use as callback
-function doStuffWithDom({ url, element }) {
-  chrome.storage.sync.get(['all_data'], function ({ all_data }) {
-    console.log('all_data', all_data);
+function storeCaptureDataCallback({ url, element }) {
+  chrome.storage.sync.get([ALL_DATA_KEY], function ({ all_data }) {
+    console.log(ALL_DATA_KEY, all_data);
     chrome.storage.sync.set({
       all_data: { ...(all_data || {}), [url]: [element] },
     });
@@ -35,7 +36,7 @@ chrome.contextMenus.onClicked.addListener(function (info, tab) {
         action: 'right_menu_clicked',
         url: tab.url,
       },
-      doStuffWithDom,
+      storeCaptureDataCallback,
     );
   }
 });

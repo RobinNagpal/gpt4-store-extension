@@ -1,9 +1,10 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { getElementByXpath, getXPath } from './utils/xpaths';
-import CaptureButton from './components/capture_button';
+import { CaptureGlobals } from '@/utils/CaptureGlobals';
+import CaptureButtons from '@/components/CaptureButton';
 import Frame from './components/frame';
 import IndexDropdown from './components/index_dropdown';
+import { getElementByXpath, getXPath } from './utils/xpaths';
 
 // https://github.com/MariusBongarts/medium-highlighter/blob/master/src/content_script.ts
 if (Frame.isReady()) {
@@ -13,7 +14,7 @@ if (Frame.isReady()) {
 }
 
 function boot() {
-  const captureGlobal: any = {};
+  const captureGlobal: CaptureGlobals = {};
 
   const root = document.createElement('div');
   root.id = 'capture-root-node';
@@ -34,21 +35,21 @@ function boot() {
   const App = (
     <Frame>
       <IndexDropdown />
-      <CaptureButton captureGlobal={captureGlobal} />
+      <CaptureButtons captureGlobal={captureGlobal} />
     </Frame>
   );
 
   ReactDOM.render(App, root);
 
-  //content script
-  var clickedEl = null;
-
   document.addEventListener(
     'contextmenu',
     function (event: MouseEvent) {
-      clickedEl = event.target;
+      captureGlobal.selectedElement = event.target as HTMLElement;
       console.log('stop capturing callback');
-      if (clickedEl && captureGlobal.stopCapturingCallback) {
+      if (
+        captureGlobal.selectedElement &&
+        captureGlobal.stopCapturingCallback
+      ) {
         console.log('stop capturing callback in contextmenu');
         captureGlobal.stopCapturingCallback();
       }
@@ -66,7 +67,7 @@ function boot() {
     if (request.action == 'right_menu_clicked') {
       console.log('right_menu_clicked', request);
 
-      const xpath = getXPath(clickedEl);
+      const xpath = getXPath(captureGlobal.selectedElement);
       console.log('xpath', xpath);
       const elementByXpath = getElementByXpath(xpath);
 
