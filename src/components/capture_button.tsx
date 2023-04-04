@@ -22,13 +22,20 @@ const captureStopButtonClass = css({
 });
 
 export class CaptureButton extends React.Component<
-  {},
+  { captureGlobal: any },
   { isCapturing: boolean }
 > {
   constructor(props) {
     super(props);
     this.state = {
       isCapturing: false,
+    };
+  }
+
+  componentDidMount() {
+    this.props.captureGlobal.stopCapturingCallback = () => {
+      console.log('stop capturing callback in componentDidMount');
+      this.setState({ isCapturing: false });
     };
   }
 
@@ -46,7 +53,6 @@ export class CaptureButton extends React.Component<
       element.addEventListener(
         'mouseenter',
         (e) => {
-          console.log('isCapturing 001', this.state?.isCapturing);
           const elementsByClassName = document.getElementsByClassName(
             'capture-highlighter',
           );
@@ -65,7 +71,6 @@ export class CaptureButton extends React.Component<
   };
 
   startCapture = () => {
-    console.log('start capture');
     this.setState({ isCapturing: true });
     document.addEventListener('mousemove', this.listener, { passive: true });
   };

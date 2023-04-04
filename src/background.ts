@@ -26,6 +26,8 @@ function doStuffWithDom({ url, element }) {
 }
 
 chrome.contextMenus.onClicked.addListener(function (info, tab) {
+  console.log('info', info);
+  console.log('tab', tab);
   if (info.menuItemId === 'myContextMenuId') {
     chrome.tabs.sendMessage(
       tab.id,
