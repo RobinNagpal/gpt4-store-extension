@@ -17,6 +17,7 @@
     "url": "https://github.com/chibat/chrome-extension-typescript-starter.git"
   },
   "dependencies": {
+    "@react-icons/all-files": "^4.1.0",
     "classnames": "^2.2.5",
     "glamor": "^2.20.25",
     "react": "^18.2.0",

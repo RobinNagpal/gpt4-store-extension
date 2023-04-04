@@ -1,16 +1,18 @@
 import React from 'react';
 import styled from 'styled-components';
+import { FaRecordVinyl } from '@react-icons/all-files/fa/FaRecordVinyl';
+import { FaStop } from '@react-icons/all-files/fa/FaStop';
 
 const Button = styled.button`
   border: none;
   color: white;
-  padding: 15px 32px;
+  padding: 8px 16px;
   text-align: center;
   text-decoration: none;
   font-size: 16px;
-  display: inline-block;
   border-radius: 4px;
   margin: 16px;
+  display: flex;
 `;
 
 const CaptureStartButton = styled(Button)`
@@ -19,6 +21,20 @@ const CaptureStartButton = styled(Button)`
 
 const CaptureStopButton = styled(Button)`
   background-color: red;
+`;
+
+const IconDiv = styled.div`
+  font-size: 14px;
+  padding-right: 6px;
+  display: flex;
+  align-items: center;
+  height: 24px;
+`;
+
+const ButtonLabel = styled.div`
+  font-size: 16px;
+  display: flex;
+  align-items: center;
 `;
 
 export class CaptureButtons extends React.Component<
@@ -76,15 +92,23 @@ export class CaptureButtons extends React.Component<
   render() {
     const capturing = this.state?.isCapturing && !this.props.selectedElement;
     return (
-      <>
+      <div>
         {!capturing ? (
           <CaptureStartButton onClick={this.startCapture}>
-            Capture
+            <IconDiv>
+              <FaRecordVinyl />
+            </IconDiv>{' '}
+            <ButtonLabel>Capture</ButtonLabel>
           </CaptureStartButton>
         ) : (
-          <CaptureStopButton onClick={this.stopCapture}>Stop</CaptureStopButton>
+          <CaptureStopButton onClick={this.stopCapture}>
+            <IconDiv>
+              <FaStop />
+            </IconDiv>{' '}
+            <ButtonLabel>Stop</ButtonLabel>
+          </CaptureStopButton>
         )}
-      </>
+      </div>
     );
   }
 }

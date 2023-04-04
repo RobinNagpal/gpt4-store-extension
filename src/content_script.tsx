@@ -1,6 +1,5 @@
 import Frame from '@/components/Frame';
 import Main from '@/components/Main';
-import { CaptureGlobals } from '@/utils/CaptureGlobals';
 import React from 'react';
 import ReactDOM from 'react-dom';
 

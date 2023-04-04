@@ -1,5 +1,4 @@
 // create a react component
-import { CaptureGlobals } from '@/utils/CaptureGlobals';
 import { getElementByXpath, getXPath } from '@/utils/Xpaths';
 import React, { useEffect, useState } from 'react';
 import CaptureButtons from '@/components/CaptureButtons';
