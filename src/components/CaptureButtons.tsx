@@ -1,19 +1,5 @@
-import React, { useCallback, useState } from 'react';
-import { css } from 'glamor';
+import React from 'react';
 import styled from 'styled-components';
-
-// convert the following glamor code to styled-components
-const buttonClass = css({
-  border: 'none',
-  color: 'white',
-  padding: '15px 32px',
-  textAlign: 'center',
-  textDecoration: 'none',
-  fontSize: '16px',
-  display: 'inline-block',
-  borderRadius: '4px',
-  margin: '16px',
-});
 
 const Button = styled.button`
   border: none;
@@ -35,21 +21,14 @@ const CaptureStopButton = styled(Button)`
   background-color: red;
 `;
 
-export class CaptureButton extends React.Component<
-  { captureGlobal: any },
+export class CaptureButtons extends React.Component<
+  { selectedElement?: HTMLElement },
   { isCapturing: boolean }
 > {
   constructor(props) {
     super(props);
     this.state = {
       isCapturing: false,
-    };
-  }
-
-  componentDidMount() {
-    this.props.captureGlobal.stopCapturingCallback = () => {
-      console.log('stop capturing callback in componentDidMount');
-      this.setState({ isCapturing: false });
     };
   }
 
@@ -73,7 +52,7 @@ export class CaptureButton extends React.Component<
           for (let i = 0; i < elementsByClassName.length; i++) {
             elementsByClassName[i].classList.remove('capture-highlighter');
           }
-          if (this.state?.isCapturing) {
+          if (this.state?.isCapturing && !this.props.selectedElement) {
             (e.currentTarget as HTMLElement).classList.add(
               'capture-highlighter',
             );
@@ -95,7 +74,7 @@ export class CaptureButton extends React.Component<
   };
 
   render() {
-    const capturing = this.state?.isCapturing;
+    const capturing = this.state?.isCapturing && !this.props.selectedElement;
     return (
       <>
         {!capturing ? (
@@ -110,4 +89,4 @@ export class CaptureButton extends React.Component<
   }
 }
 
-export default CaptureButton;
+export default CaptureButtons;

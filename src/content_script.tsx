@@ -1,10 +1,8 @@
+import Frame from '@/components/Frame';
+import Main from '@/components/Main';
+import { CaptureGlobals } from '@/utils/CaptureGlobals';
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { CaptureGlobals } from '@/utils/CaptureGlobals';
-import CaptureButtons from '@/components/CaptureButton';
-import Frame from './components/frame';
-import IndexDropdown from './components/index_dropdown';
-import { getElementByXpath, getXPath } from './utils/xpaths';
 
 // https://github.com/MariusBongarts/medium-highlighter/blob/master/src/content_script.ts
 if (Frame.isReady()) {
@@ -14,8 +12,6 @@ if (Frame.isReady()) {
 }
 
 function boot() {
-  const captureGlobal: CaptureGlobals = {};
-
   const root = document.createElement('div');
   root.id = 'capture-root-node';
 
@@ -32,52 +28,7 @@ function boot() {
 
   document.body.appendChild(root);
 
-  const App = (
-    <Frame>
-      <IndexDropdown />
-      <CaptureButtons captureGlobal={captureGlobal} />
-    </Frame>
-  );
+  const App = <Main />;
 
   ReactDOM.render(App, root);
-
-  document.addEventListener(
-    'contextmenu',
-    function (event: MouseEvent) {
-      captureGlobal.selectedElement = event.target as HTMLElement;
-      console.log('stop capturing callback');
-      if (
-        captureGlobal.selectedElement &&
-        captureGlobal.stopCapturingCallback
-      ) {
-        console.log('stop capturing callback in contextmenu');
-        captureGlobal.stopCapturingCallback();
-      }
-    },
-    true,
-  );
-
-  // read message from background script
-  chrome.runtime.onMessage.addListener(function (
-    request,
-    sender,
-    sendResponse,
-  ) {
-    console.log('onMessage', request, sender, sendResponse);
-    if (request.action == 'right_menu_clicked') {
-      console.log('right_menu_clicked', request);
-
-      const xpath = getXPath(captureGlobal.selectedElement);
-      console.log('xpath', xpath);
-      const elementByXpath = getElementByXpath(xpath);
-
-      (elementByXpath as HTMLElement).classList.add(
-        'already-captured-highlighter',
-      );
-
-      console.log('element', elementByXpath);
-
-      sendResponse({ url: request.url, xpath: xpath });
-    }
-  });
 }
