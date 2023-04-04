@@ -33,7 +33,7 @@ interface IState {
 }
 
 const frameClass = css({
-  background: 'rgba(255,255,255,.35)',
+  background: 'rgba(125,125,125,.8)',
   height: '200px',
   border: 'none',
   width: '100%',
@@ -60,9 +60,8 @@ const maskVisibleClass = css({
 
 const containerClass = css({
   position: 'fixed',
-  top: '0px',
+  top: '40%',
   right: '0px',
-  height: '100%',
   width: '65%',
   maxWidth: '250px',
   padding: '8px',
