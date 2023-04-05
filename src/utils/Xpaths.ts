@@ -32,6 +32,7 @@ export function getXPath(node) {
     node =
       node.nodeType == Node.ATTRIBUTE_NODE ? node.ownerElement : node.parentNode
   ) {
+    // @ts-ignore
     comp = comps[comps.length] = {};
     switch (node.nodeType) {
       case Node.TEXT_NODE:

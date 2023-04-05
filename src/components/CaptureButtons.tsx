@@ -1,42 +1,6 @@
+import { CaptureActionButton } from '@/components/capture/CaptureActionButton';
 import ElementSelectionButtons from '@/components/ElementSelectionButtons';
 import React from 'react';
-import styled from 'styled-components';
-import { FaRecordVinyl } from '@react-icons/all-files/fa/FaRecordVinyl';
-import { FaStop } from '@react-icons/all-files/fa/FaStop';
-
-const Button = styled.button`
-  border: none;
-  color: white;
-  padding: 8px 16px;
-  text-align: center;
-  text-decoration: none;
-  font-size: 16px;
-  border-radius: 4px;
-  margin-top: 16px;
-  display: flex;
-`;
-
-const CaptureStartButton = styled(Button)`
-  background-color: #4caf50;
-`;
-
-const CaptureStopButton = styled(Button)`
-  background-color: red;
-`;
-
-const IconDiv = styled.div`
-  font-size: 14px;
-  padding-right: 6px;
-  display: flex;
-  align-items: center;
-  height: 24px;
-`;
-
-const ButtonLabel = styled.div`
-  font-size: 16px;
-  display: flex;
-  align-items: center;
-`;
 
 export class CaptureButtons extends React.Component<
   {
@@ -60,7 +24,7 @@ export class CaptureButtons extends React.Component<
 
     const isExtensionElement = document
       .getElementById('capture-root-node')
-      .contains(element);
+      ?.contains(element);
 
     if (!isExtensionElement && this.state?.isCapturing) {
       element.addEventListener(
@@ -93,31 +57,30 @@ export class CaptureButtons extends React.Component<
     document.removeEventListener('mousemove', this.listener);
   };
 
+  indexCapture = () => {
+    this.setState({ isCapturing: false });
+    document.removeEventListener('mousemove', this.listener);
+  };
+
   render() {
     const capturing = this.state?.isCapturing && !this.props.selectedElement;
     return (
       <div>
-        {!capturing ? (
-          <CaptureStartButton onClick={this.startCapture}>
-            <IconDiv>
-              <FaRecordVinyl />
-            </IconDiv>{' '}
-            <ButtonLabel>Capture</ButtonLabel>
-          </CaptureStartButton>
-        ) : (
-          <CaptureStopButton onClick={this.stopCapture}>
-            <IconDiv>
-              <FaStop />
-            </IconDiv>{' '}
-            <ButtonLabel>Stop</ButtonLabel>
-          </CaptureStopButton>
-        )}
-        {this.props.selectedElement ? (
-          <ElementSelectionButtons
-            selectedElement={this.props.selectedElement}
-            setSelectedElement={this.props.setSelectedElement}
-          />
-        ) : null}
+        <CaptureActionButton
+          capturing={this.state?.isCapturing}
+          startCaptureFn={this.startCapture}
+          selectedElement={this.props.selectedElement}
+          stopCaptureFn={this.stopCapture}
+          indexCaptureFn={this.indexCapture}
+        />
+        <div>
+          {this.props.selectedElement ? (
+            <ElementSelectionButtons
+              selectedElement={this.props.selectedElement}
+              setSelectedElement={this.props.setSelectedElement}
+            />
+          ) : null}
+        </div>
       </div>
     );
   }

@@ -30,13 +30,29 @@ chrome.contextMenus.onClicked.addListener(function (info, tab) {
   console.log('info', info);
   console.log('tab', tab);
   if (info.menuItemId === 'myContextMenuId') {
-    chrome.tabs.sendMessage(
-      tab.id,
-      {
-        action: 'right_menu_clicked',
-        url: tab.url,
-      },
-      storeCaptureDataCallback,
-    );
+    if (tab?.id) {
+      chrome.tabs.sendMessage(
+        tab.id,
+        {
+          action: 'right_menu_clicked',
+          url: tab.url,
+        },
+        storeCaptureDataCallback,
+      );
+    }
   }
+});
+
+chrome.runtime.onStartup.addListener(function () {
+  chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+    chrome.storage.sync.get([ALL_DATA_KEY], function ({ all_data }) {
+      if (tabs[0].id) {
+        chrome.tabs.sendMessage(tabs[0].id, {
+          action: 'highlight_already_selected',
+          url: tabs[0].url,
+          all_data: all_data || {},
+        });
+      }
+    });
+  });
 });

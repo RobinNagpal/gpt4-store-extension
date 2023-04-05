@@ -39,34 +39,50 @@ function ElementSelectionButtons({
   }, []);
 
   const moveUp = useCallback(() => {
-    selectedElement.classList.remove('already-captured-highlighter');
-    selectedElement.parentElement.classList.add('already-captured-highlighter');
-    setSelectedElement(selectedElement.parentElement);
+    const parentElement = selectedElement.parentElement;
+    if (parentElement) {
+      selectedElement.classList.remove('already-captured-highlighter');
+      parentElement.classList.add('already-captured-highlighter');
+      setSelectedElement(parentElement);
+    }
   }, [selectedElement]);
 
   const moveDown = useCallback(() => {
     let index = 0;
     const children = selectedElement.children;
     let childElement = children && children[index];
+    let childTextLength = childElement?.textContent?.trim()?.length || 0;
 
-    while (
-      (childElement?.textContent?.trim()?.length || 0) < 200 &&
-      index < children.length
-    ) {
-      console.log('childElement has less number of characters :', childElement);
+    while (childTextLength < 200 && index < children.length) {
       childElement = children[++index];
     }
 
-    if (childElement) {
+    if (childTextLength >= 200) {
       removeHighlighter();
+      console.log('childElement', childTextLength);
       childElement.classList.add('already-captured-highlighter');
       setSelectedElement(childElement as HTMLElement);
+    } else {
+      console.log(
+        'Not selecting child element as length is not apt',
+        childTextLength,
+        childElement,
+      );
     }
   }, [selectedElement]);
 
   const moveLeft = useCallback(() => {
+    console.log(
+      'selectedElement',
+      selectedElement,
+      'previousElement',
+      selectedElement?.previousElementSibling,
+    );
     let previousElement = selectedElement.previousElementSibling;
-    while ((previousElement?.textContent?.trim()?.length || 0) < 200) {
+    while (
+      previousElement &&
+      (previousElement?.textContent?.trim()?.length || 0) < 200
+    ) {
       previousElement = previousElement.previousElementSibling;
     }
     if (previousElement) {
@@ -77,8 +93,18 @@ function ElementSelectionButtons({
   }, [selectedElement]);
 
   const moveRight = useCallback(() => {
+    console.log(
+      'selectedElement',
+      selectedElement,
+      'nextElementSibling',
+      selectedElement?.nextElementSibling,
+    );
+
     let nextElement = selectedElement.nextElementSibling;
-    while ((nextElement?.textContent?.trim()?.length || 0) < 200) {
+    while (
+      nextElement &&
+      (nextElement?.textContent?.trim()?.length || 0) < 200
+    ) {
       nextElement = nextElement.nextElementSibling;
     }
     if (nextElement) {

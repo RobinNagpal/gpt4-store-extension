@@ -3,8 +3,8 @@ import React, { useState } from 'react';
 import Checkbox from '@/components/Checkbox';
 
 function IndexCheckboxes() {
-  const [selectedIndexes, setSelectedIndexes] = useState([]);
-  const updateIndexes = (index) => {
+  const [selectedIndexes, setSelectedIndexes] = useState<string[]>([]);
+  const updateIndexes = (index: string) => {
     if (selectedIndexes.includes(index)) {
       setSelectedIndexes(selectedIndexes.filter((i) => i !== index));
     } else {

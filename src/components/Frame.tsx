@@ -123,7 +123,7 @@ export class Frame extends Component<IProps, IState> {
 
     window[FRAME_TOGGLE_FUNCTION] = this.toggleFrame;
 
-    onMount({
+    onMount?.({
       mask: this.mask,
       frame: this.frame,
     });
@@ -138,7 +138,7 @@ export class Frame extends Component<IProps, IState> {
   componentWillUnmount(): void {
     const { onUnmount } = this.props;
 
-    onUnmount({
+    onUnmount?.({
       mask: this.mask,
       frame: this.frame,
     });
@@ -150,7 +150,7 @@ export class Frame extends Component<IProps, IState> {
   onLoad = (): void => {
     const { onLoad } = this.props;
 
-    onLoad({
+    onLoad?.({
       mask: this.mask,
       frame: this.frame,
     });
@@ -203,7 +203,7 @@ export class Frame extends Component<IProps, IState> {
             [maskClass.toString()]: true,
             [maskVisibleClass.toString()]:
               !isMinimized || this.props.selectedElement,
-            [maskClassName]: true,
+            [maskClassName || '']: true,
           })}
           style={maskStyle}
           onClick={this.onMaskClick}
@@ -215,7 +215,7 @@ export class Frame extends Component<IProps, IState> {
             [containerVisibleClass.toString()]: isVisible,
             [containerMinimizedClass.toString()]:
               isMinimized && !this.props.selectedElement,
-            [containerClassName]: true,
+            [containerClassName || '']: true,
           })}
           style={containerStyle}
           onClick={this.onFrameClick}
@@ -223,7 +223,7 @@ export class Frame extends Component<IProps, IState> {
           <div
             className={cx({
               [frameClass.toString()]: true,
-              [iframeClassName]: true,
+              [iframeClassName || '']: true,
             })}
             style={iframeStyle}
           >

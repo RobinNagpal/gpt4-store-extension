@@ -19,6 +19,7 @@
   "dependencies": {
     "@react-icons/all-files": "^4.1.0",
     "classnames": "^2.2.5",
+    "crx-hotreload": "^1.0.6",
     "glamor": "^2.20.25",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",

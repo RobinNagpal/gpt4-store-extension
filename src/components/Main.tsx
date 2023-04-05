@@ -13,6 +13,7 @@ function Main() {
   const [selectedElement, setSelectedElement] = useState<HTMLElement>();
 
   useEffect(() => {
+    // add event listener to capture right click and set selected element
     document.addEventListener(
       'contextmenu',
       function (event: MouseEvent) {
@@ -20,25 +21,25 @@ function Main() {
       },
       true,
     );
+  }, [selectedElement]);
 
+  useEffect(() => {
     // read message from background script
     chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
       console.log('onMessage', request, sender, sendResponse);
       if (request.action == 'right_menu_clicked') {
-        console.log('right_menu_clicked', request);
-
         const xpath = getXPath(selectedElement);
-
-        console.log('xpath', xpath);
-
         const elementByXpath = getElementByXpath(xpath) as HTMLElement;
-
         elementByXpath.classList.add('already-captured-highlighter');
         elementByXpath.classList.remove('capture-highlighter');
 
-        console.log('element', elementByXpath);
-
         sendResponse({ url: request.url, xpath: xpath });
+      }
+
+      if (request.action == 'highlight_already_selected') {
+        const xpath = getXPath(selectedElement);
+        // const elementByXpath = getElementByXpath(xpath) as HTMLElement;
+        // elementByXpath.classList.add('already-captured-highlighter');
       }
     });
   }, [selectedElement]);
