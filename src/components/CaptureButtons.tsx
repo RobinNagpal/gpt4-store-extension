@@ -1,3 +1,4 @@
+import ElementSelectionButtons from '@/components/ElementSelectionButtons';
 import React from 'react';
 import styled from 'styled-components';
 import { FaRecordVinyl } from '@react-icons/all-files/fa/FaRecordVinyl';
@@ -11,7 +12,7 @@ const Button = styled.button`
   text-decoration: none;
   font-size: 16px;
   border-radius: 4px;
-  margin: 16px;
+  margin-top: 16px;
   display: flex;
 `;
 
@@ -38,7 +39,10 @@ const ButtonLabel = styled.div`
 `;
 
 export class CaptureButtons extends React.Component<
-  { selectedElement?: HTMLElement },
+  {
+    selectedElement?: HTMLElement;
+    setSelectedElement: (element: HTMLElement) => void;
+  },
   { isCapturing: boolean }
 > {
   constructor(props) {
@@ -108,6 +112,12 @@ export class CaptureButtons extends React.Component<
             <ButtonLabel>Stop</ButtonLabel>
           </CaptureStopButton>
         )}
+        {this.props.selectedElement ? (
+          <ElementSelectionButtons
+            selectedElement={this.props.selectedElement}
+            setSelectedElement={this.props.setSelectedElement}
+          />
+        ) : null}
       </div>
     );
   }

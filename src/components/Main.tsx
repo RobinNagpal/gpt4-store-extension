@@ -1,10 +1,14 @@
 // create a react component
+import IndexCheckboxes from '@/components/IndexCheckboxes';
 import { getElementByXpath, getXPath } from '@/utils/Xpaths';
 import React, { useEffect, useState } from 'react';
 import CaptureButtons from '@/components/CaptureButtons';
 import Frame from '@/components/Frame';
-import IndexDropdown from '@/components/IndexDropdown';
+import styled from 'styled-components';
 
+const MainDiv = styled.div`
+  padding: 16px;
+`;
 function Main() {
   const [selectedElement, setSelectedElement] = useState<HTMLElement>();
 
@@ -24,12 +28,13 @@ function Main() {
         console.log('right_menu_clicked', request);
 
         const xpath = getXPath(selectedElement);
-        console.log('xpath', xpath);
-        const elementByXpath = getElementByXpath(xpath);
 
-        (elementByXpath as HTMLElement).classList.add(
-          'already-captured-highlighter',
-        );
+        console.log('xpath', xpath);
+
+        const elementByXpath = getElementByXpath(xpath) as HTMLElement;
+
+        elementByXpath.classList.add('already-captured-highlighter');
+        elementByXpath.classList.remove('capture-highlighter');
 
         console.log('element', elementByXpath);
 
@@ -39,9 +44,14 @@ function Main() {
   }, [selectedElement]);
 
   return (
-    <Frame>
-      <IndexDropdown />
-      <CaptureButtons selectedElement={selectedElement} />
+    <Frame selectedElement={selectedElement}>
+      <MainDiv>
+        <IndexCheckboxes />
+        <CaptureButtons
+          selectedElement={selectedElement}
+          setSelectedElement={setSelectedElement}
+        />
+      </MainDiv>
     </Frame>
   );
 }

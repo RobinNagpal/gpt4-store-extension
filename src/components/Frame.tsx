@@ -25,6 +25,7 @@ interface IProps {
     mask: HTMLDivElement | null;
     frame: HTMLIFrameElement | null;
   }) => void;
+  selectedElement?: HTMLElement;
 }
 
 interface IState {
@@ -34,7 +35,7 @@ interface IState {
 
 const frameClass = css({
   background: 'rgba(125,125,125,.8)',
-  height: '200px',
+  minHeight: '200px',
   border: 'none',
   width: '100%',
   borderRadius: '8px 0 0 8px',
@@ -200,7 +201,8 @@ export class Frame extends Component<IProps, IState> {
         <div
           className={cx({
             [maskClass.toString()]: true,
-            [maskVisibleClass.toString()]: !isMinimized,
+            [maskVisibleClass.toString()]:
+              !isMinimized || this.props.selectedElement,
             [maskClassName]: true,
           })}
           style={maskStyle}
@@ -211,7 +213,8 @@ export class Frame extends Component<IProps, IState> {
           className={cx({
             [containerClass.toString()]: true,
             [containerVisibleClass.toString()]: isVisible,
-            [containerMinimizedClass.toString()]: isMinimized,
+            [containerMinimizedClass.toString()]:
+              isMinimized && !this.props.selectedElement,
             [containerClassName]: true,
           })}
           style={containerStyle}
